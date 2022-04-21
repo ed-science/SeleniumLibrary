@@ -84,12 +84,9 @@ class NewWebDriverCreator(WebDriverCreator):
         service_log_path = self._get_log_path(service_log_path)
         options = self.selenium_options.create(self.browser_names.get(browser), options)
         if service_log_path:
-            logger.info("Browser driver log file created to: %s" % service_log_path)
+            logger.info(f"Browser driver log file created to: {service_log_path}")
             self._create_directory(service_log_path)
-        if (
-            creation_method == self.create_firefox
-            or creation_method == self.create_headless_firefox
-        ):
+        if creation_method in [self.create_firefox, self.create_headless_firefox]:
             return creation_method(
                 desired_capabilities,
                 remote_url,

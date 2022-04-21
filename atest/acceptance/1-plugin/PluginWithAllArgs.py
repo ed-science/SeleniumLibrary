@@ -12,10 +12,10 @@ class PluginWithAllArgs(LibraryComponent):
 
     @keyword
     def return_all_args_as_string(self):
-        joined_str = "start: arg=%s," % self.arg
+        joined_str = f"start: arg={self.arg},"
         for arg in self.varargs:
             joined_str = f"{joined_str} {arg},"
         kwargs = OrderedDict(sorted(self.kwargs.items()))
         for key in kwargs:
-            joined_str = "{} {}={},".format(joined_str, key, kwargs[key])
+            joined_str = f"{joined_str} {key}={kwargs[key]},"
         return joined_str[:-1]

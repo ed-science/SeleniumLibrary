@@ -22,7 +22,7 @@ def remove_output_dir():
 
 def run_unit_tests(reporter, reporter_args, suite, verbose):
     sys.path.insert(0, SRC)
-    suite = CURDIR if not suite else CURDIR / "test" / suite
+    suite = CURDIR / "test" / suite if suite else CURDIR
     py_args = [
         "--showlocals",
         "--tb=long",

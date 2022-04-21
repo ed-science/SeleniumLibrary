@@ -35,8 +35,7 @@ def teardown_function():
 
 @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
 def test_parse_options_string(options, reporter):
-    results = []
-    results.append(options._parse('method("arg1")'))
+    results = [options._parse('method("arg1")')]
     results.append(options._parse('method("arg1", "arg2")'))
     results.append(options._parse("method(True)"))
     results.append(options._parse("method(1)"))
@@ -74,8 +73,7 @@ def test_parse_options_string(options, reporter):
 
 @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
 def test_index_of_separator(options, reporter):
-    results = []
-    results.append(options._get_arument_index('method({"key": "value"})'))
+    results = [options._get_arument_index('method({"key": "value"})')]
     results.append(options._get_arument_index('attribute={"key": "value"}'))
     results.append(options._get_arument_index('method(foo={"key": "value"})'))
     results.append(options._get_arument_index('attribute=("value1", "value2")'))
@@ -84,8 +82,7 @@ def test_index_of_separator(options, reporter):
 
 @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
 def test_parse_complex_object(options, reporter):
-    results = []
-    results.append(options._parse_to_tokens('method({"key": "value"})'))
+    results = [options._parse_to_tokens('method({"key": "value"})')]
     results.append(options._parse_to_tokens('attribute={"key": "value"}'))
     results.append(options._parse_to_tokens('attribute=("value1", "value2")'))
     results.append(options._parse_to_tokens('method("foo", {"key": "value"})'))
@@ -94,8 +91,7 @@ def test_parse_complex_object(options, reporter):
 
 @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
 def test_parse_arguemnts(options, reporter):
-    results = []
-    results.append(options._parse_arguments(("arg1",), True))
+    results = [options._parse_arguments(("arg1",), True)]
     results.append(options._parse_arguments("arg1", False))
     results.append(options._parse_arguments({"key": "value"}, False))
     results.append(options._parse_arguments(["value1", "value2"], False))
@@ -105,8 +101,7 @@ def test_parse_arguemnts(options, reporter):
 
 @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
 def test_parse_options_string_errors(options, reporter):
-    results = []
-    results.append(error_formatter(options._parse, 'method("arg1)', True))
+    results = [error_formatter(options._parse, 'method("arg1)', True)]
     results.append(error_formatter(options._parse, 'method(arg1")', True))
     results.append(error_formatter(options._parse, "method(arg1)", True))
     results.append(error_formatter(options._parse, "attribute=arg1", True))
@@ -117,8 +112,7 @@ def test_parse_options_string_errors(options, reporter):
 
 @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
 def test_split_options(options, reporter):
-    results = []
-    results.append(options._split('method("arg1");method("arg2")'))
+    results = [options._split('method("arg1");method("arg2")')]
     results.append(options._split('method("arg1")'))
     results.append(options._split("attribute=True"))
     results.append(
@@ -131,11 +125,9 @@ def test_split_options(options, reporter):
 
 @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
 def test_options_create(options, reporter):
-    results = []
     options_str = 'add_argument("--disable-dev-shm-usage")'
     sel_options = options.create("chrome", options_str)
-    results.append(sel_options.arguments)
-
+    results = [sel_options.arguments]
     options_str = f'{options_str};add_argument("--headless")'
     sel_options = options.create("chrome", options_str)
     results.append(sel_options.arguments)
@@ -163,11 +155,10 @@ def test_options_create(options, reporter):
 
 @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
 def test_create_with_android(options, reporter):
-    results = []
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_experimental_option("androidPackage", "com.android.chrome")
     sel_options = options.create("android", chrome_options)
-    results.append([sel_options.arguments, sel_options.experimental_options])
+    results = [[sel_options.arguments, sel_options.experimental_options]]
     verify_all("Selenium options with android", results, reporter=reporter)
 
 
@@ -181,8 +172,7 @@ def test_get_options(options, reporter):
 
 @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
 def test_importer(options, reporter):
-    results = []
-    results.append(options._import_options("firefox"))
+    results = [options._import_options("firefox")]
     results.append(options._import_options("headless_firefox"))
     results.append(options._import_options("chrome"))
     results.append(options._import_options("headless_chrome"))
@@ -200,9 +190,7 @@ def error_formatter(method, arg, full=False):
     try:
         return method(arg)
     except Exception as error:
-        if full:
-            return f"{arg} {error}"
-        return "{} {}".format(arg, error.__str__()[:15])
+        return f"{arg} {error}" if full else f"{arg} {error.__str__()[:15]}"
 
 
 @pytest.fixture(scope="module")
@@ -215,8 +203,7 @@ def creator():
 @pytest.fixture(scope="module")
 def output_dir():
     curr_dir = os.path.dirname(os.path.abspath(__file__))
-    output_dir = os.path.abspath(os.path.join(curr_dir, "..", "..", "output_dir"))
-    return output_dir
+    return os.path.abspath(os.path.join(curr_dir, "..", "..", "output_dir"))
 
 
 def test_create_chrome_with_options(creator):

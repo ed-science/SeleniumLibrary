@@ -145,8 +145,7 @@ class SelectElementKeywords(LibraryComponent):
         syntax.
         """
         self.info(f"Verifying list '{locator}' has no selections.")
-        options = self._get_selected_options(locator)
-        if options:
+        if options := self._get_selected_options(locator):
             selection = self._format_selection(
                 self._get_labels(options), self._get_values(options)
             )

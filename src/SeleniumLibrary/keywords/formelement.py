@@ -495,10 +495,14 @@ class FormElementKeywords(LibraryComponent):
             )
 
     def _get_value_from_radio_buttons(self, elements):
-        for element in elements:
-            if element.is_selected():
-                return element.get_attribute("value")
-        return None
+        return next(
+            (
+                element.get_attribute("value")
+                for element in elements
+                if element.is_selected()
+            ),
+            None,
+        )
 
     def _input_text_into_text_field(self, locator, text, clear=True, disable_log=False):
         element = self.find_element(locator)

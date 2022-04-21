@@ -83,9 +83,11 @@ class CookieKeywords(LibraryComponent):
         The `` as_dict`` argument is new in SeleniumLibrary 3.3
         """
         if not as_dict:
-            pairs = []
-            for cookie in self.driver.get_cookies():
-                pairs.append(f"{cookie['name']}={cookie['value']}")
+            pairs = [
+                f"{cookie['name']}={cookie['value']}"
+                for cookie in self.driver.get_cookies()
+            ]
+
             return "; ".join(pairs)
         else:
             pairs = DotDict()

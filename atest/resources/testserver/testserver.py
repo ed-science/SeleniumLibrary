@@ -41,7 +41,7 @@ def start_server(path, port=7000):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2 or sys.argv[1] not in ["start", "stop"]:
-        print("usage: %s start|stop" % sys.argv[0])
+        print(f"usage: {sys.argv[0]} start|stop")
         sys.exit(1)
     if sys.argv[1] == "start":
         path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

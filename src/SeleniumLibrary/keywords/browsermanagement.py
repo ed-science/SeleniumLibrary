@@ -283,8 +283,7 @@ class BrowserManagementKeywords(LibraryComponent):
 
         The ``executable_path`` argument is new in SeleniumLibrary 4.2.
         """
-        index = self.drivers.get_index(alias)
-        if index:
+        if index := self.drivers.get_index(alias):
             self.info(f"Using existing browser from index {index}.")
             self.switch_browser(alias)
             if url:

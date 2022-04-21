@@ -76,9 +76,7 @@ class LibraryComponent(ContextAware):
         logger.info(f"Current page does not contain {tag_message} '{locator}'.")
 
     def get_timeout(self, timeout: Union[str, int, timedelta, None] = None) -> float:
-        if timeout is None:
-            return self.ctx.timeout
-        return _convert_timeout(timeout)
+        return self.ctx.timeout if timeout is None else _convert_timeout(timeout)
 
     @property
     def log_dir(self):

@@ -57,16 +57,12 @@ class JavaScriptKeywordsTest(unittest.TestCase):
 
     @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
     def test_separate_code_and_args(self):
-        all_results = []
-        for code in self.code_examples:
-            all_results.append(self.js_reporter(code))
+        all_results = [self.js_reporter(code) for code in self.code_examples]
         verify_all("code and args", all_results, reporter=self.reporter)
 
     @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
     def test_indexing(self):
-        all_results = []
-        for code in self.code_examples:
-            all_results.append(self.js._get_marker_index(code))
+        all_results = [self.js._get_marker_index(code) for code in self.code_examples]
         verify_all("index", all_results, reporter=self.reporter)
 
     @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
@@ -95,10 +91,8 @@ class JavaScriptKeywordsTest(unittest.TestCase):
             ("ARGUMENTS", "arg1", "ARGUMENTS", "arg1", "JAVASCRIPT", "code1"),
             ("aRGUMENtS", "arg1", "arg2", "JAVASCRIPT", "code1", "code2"),
         ]
-        examples = examples + self.code_examples
-        all_results = []
-        for code in examples:
-            all_results.append(self.js_marker_error(code))
+        examples += self.code_examples
+        all_results = [self.js_marker_error(code) for code in examples]
         verify_all("error", all_results, reporter=self.reporter)
 
     def js_marker_error(self, code):

@@ -5,13 +5,13 @@ from selenium.webdriver.support.events import AbstractEventListener
 
 class MyListener(AbstractEventListener):
     def before_navigate_to(self, url, driver):
-        logger.info("Before navigate to %s" % url)
+        logger.info(f"Before navigate to {url}")
         sl = BuiltIn().get_library_instance("SeleniumLibrary")
         if sl.driver:
             logger.info("Got driver also from SeleniumLibrary.")
 
     def after_navigate_to(self, url, driver):
-        logger.info("After navigate to %s" % url)
+        logger.info(f"After navigate to {url}")
 
     def before_click(self, element, driver):
         logger.info("Before click")

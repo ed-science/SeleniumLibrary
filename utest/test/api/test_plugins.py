@@ -66,7 +66,7 @@ class ExtendingSeleniumLibrary(unittest.TestCase):
         parsed_plugin = parsed_plugins[0]
         self.assertEqual(len(parsed_plugins), 1)
         self.assertEqual(parsed_plugin.module, plugin)
-        self.assertEqual(parsed_plugin.args, [arg for arg in plugin_args.split(";")])
+        self.assertEqual(parsed_plugin.args, list(plugin_args.split(";")))
         self.assertEqual(parsed_plugin.kw_args, {})
 
     def test_parse_plugin_with_kw_args(self):

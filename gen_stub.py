@@ -43,9 +43,8 @@ def get_method_name_for_keyword(keyword_name: str) -> str:
 def get_type_string_from_type(argument_type: type) -> str:
     if hasattr(argument_type, "__name__"):
         return argument_type.__name__
-    else:
-        arg_type_str = str(argument_type.__repr__()).lstrip("typing.")
-        return arg_type_str.replace("NoneType", "None")
+    arg_type_str = str(argument_type.__repr__()).lstrip("typing.")
+    return arg_type_str.replace("NoneType", "None")
 
 
 def get_type_sting_from_argument(argument_string: str, argument_types: dict) -> str:
@@ -56,7 +55,7 @@ def get_type_sting_from_argument(argument_string: str, argument_types: dict) -> 
 
 
 def get_function_list_from_keywords(keywords):
-    functions = list()
+    functions = []
     for keyword in keywords:
         if keyword == "switch_window":
             print(keyword)
@@ -71,18 +70,19 @@ def get_function_list_from_keywords(keywords):
 
 
 def keyword_line(keyword_arguments, keyword_types, method_name):
-    arguments_list = list()
+    arguments_list = []
     for argument in keyword_arguments:
         if isinstance(argument, tuple):
             arg_str = argument[0]
             default_value = argument[1]
-            arg_type_str = get_type_sting_from_argument(arg_str, keyword_types)
-            if arg_type_str:
+            if arg_type_str := get_type_sting_from_argument(
+                arg_str, keyword_types
+            ):
                 if default_value is None:
                     arg_type_str = f"Optional[{arg_type_str}]"
-                if arg_type_str == "str" or arg_type_str == "Union[list, str]":
+                if arg_type_str in ["str", "Union[list, str]"]:
                     default_value = f"'{default_value}'"
-                arg_str = arg_str + f": {arg_type_str}"
+                arg_str = f"{arg_str}: {arg_type_str}"
             elif isinstance(default_value, str):
                 default_value = f"'{default_value}'"
             elif isinstance(default_value, timedelta):
@@ -90,13 +90,12 @@ def keyword_line(keyword_arguments, keyword_types, method_name):
             arg_str = f"{arg_str} = {default_value}"
         else:
             arg_str = argument
-            arg_type_str = get_type_sting_from_argument(arg_str, keyword_types)
-            if arg_type_str:
-                arg_str = arg_str + f": {arg_type_str}"
+            if arg_type_str := get_type_sting_from_argument(
+                arg_str, keyword_types
+            ):
+                arg_str = f"{arg_str}: {arg_type_str}"
         arguments_list.append(arg_str)
-    arguments_string = (
-        f", {', '.join(arguments_list)}" if len(arguments_list) > 0 else ""
-    )
+    arguments_string = f", {', '.join(arguments_list)}" if arguments_list else ""
     return f"    def {method_name}(self{arguments_string}): ...\n"
 
 

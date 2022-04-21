@@ -76,10 +76,7 @@ class WebDriverCreator:
         if service_log_path:
             logger.info(f"Browser driver log file created to: {service_log_path}")
             self._create_directory(service_log_path)
-        if (
-            creation_method == self.create_firefox
-            or creation_method == self.create_headless_firefox
-        ):
+        if creation_method in [self.create_firefox, self.create_headless_firefox]:
             return creation_method(
                 desired_capabilities,
                 remote_url,
@@ -191,9 +188,7 @@ class WebDriverCreator:
                 desired_capabilities, default_caps
             )
             return self._remote(desired_capabilities, remote_url, profile, options)
-        service_log_path = (
-            service_log_path if service_log_path else self._geckodriver_log
-        )
+        service_log_path = service_log_path or self._geckodriver_log
         if not executable_path:
             executable_path = self._get_executable_path(webdriver.Firefox)
         return webdriver.Firefox(
@@ -211,7 +206,7 @@ class WebDriverCreator:
             return webdriver.FirefoxProfile()
         try:
             return webdriver.FirefoxProfile(ff_profile_dir)
-        except (OSError, FileNotFoundError):
+        except OSError:
             ff_options = self.selenium_options._parse(ff_profile_dir)
             ff_profile = webdriver.FirefoxProfile()
             for option in ff_options:
@@ -502,35 +497,32 @@ class WebDriverCache(ConnectionCache):
 
     @property
     def active_drivers(self):
-        open_drivers = []
-        for driver in self._connections:
-            if driver not in self._closed:
-                open_drivers.append(driver)
-        return open_drivers
+        return [driver for driver in self._connections if driver not in self._closed]
 
     @property
     def active_driver_ids(self):
-        open_driver_ids = []
-        for index, driver in enumerate(self._connections):
-            if driver not in self._closed:
-                open_driver_ids.append(index + 1)
-        return open_driver_ids
+        return [
+            index + 1
+            for index, driver in enumerate(self._connections)
+            if driver not in self._closed
+        ]
 
     @property
     def active_aliases(self):
         return self._aliases
 
     def close(self):
-        if self.current:
-            driver = self.current
-            error = self._quit(driver, None)
-            for alias in self._aliases:
-                if self._aliases[alias] == self.current_index:
-                    del self._aliases[alias]
-            self.current = self._no_current
-            self._closed.add(driver)
-            if error:
-                raise error
+        if not self.current:
+            return
+        driver = self.current
+        error = self._quit(driver, None)
+        for alias in self._aliases:
+            if self._aliases[alias] == self.current_index:
+                del self._aliases[alias]
+        self.current = self._no_current
+        self._closed.add(driver)
+        if error:
+            raise error
 
     def close_all(self):
         error = None
@@ -615,15 +607,11 @@ class SeleniumOptions:
             return result
         if method:
             args_as_string = item[index + 1 : -1].strip()
-            if args_as_string:
-                args = ast.literal_eval(args_as_string)
-            else:
-                args = args_as_string
-            is_tuple = args_as_string.startswith("(")
+            args = ast.literal_eval(args_as_string) if args_as_string else args_as_string
         else:
             args_as_string = item[index + 1 :].strip()
             args = ast.literal_eval(args_as_string)
-            is_tuple = args_as_string.startswith("(")
+        is_tuple = args_as_string.startswith("(")
         method_or_attribute = item[:index].strip()
         result[method_or_attribute] = self._parse_arguments(args, is_tuple)
         return result
@@ -633,7 +621,7 @@ class SeleniumOptions:
             return []
         if is_tuple:
             return [argument]
-        if not is_tuple and isinstance(argument, tuple):
+        if isinstance(argument, tuple):
             return list(argument)
         return [argument]
 

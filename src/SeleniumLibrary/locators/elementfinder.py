@@ -110,7 +110,7 @@ class ElementFinder(ContextAware):
         return parts
 
     def _find(self, locator, tag=None, first_only=True, required=True, parent=None):
-        element_type = "Element" if not tag else tag.capitalize()
+        element_type = tag.capitalize() if tag else "Element"
         if parent and not self._is_webelement(parent):
             raise ValueError(
                 f"Parent must be Selenium WebElement but it was {type(parent)}."
@@ -124,9 +124,7 @@ class ElementFinder(ContextAware):
         if required and not elements:
             raise ElementNotFound(f"{element_type} with locator '{locator}' not found.")
         if first_only:
-            if not elements:
-                return None
-            return elements[0]
+            return elements[0] if elements else None
         return elements
 
     def register(self, strategy_name, strategy_keyword, persist=False):
@@ -257,18 +255,16 @@ class ElementFinder(ContextAware):
         return self._normalize(parent.find_elements(By.XPATH, xpath))
 
     def _get_xpath_constraints(self, constraints):
-        xpath_constraints = [
+        return [
             self._get_xpath_constraint(name, value)
             for name, value in constraints.items()
         ]
-        return xpath_constraints
 
     def _get_xpath_constraint(self, name, value):
-        if isinstance(value, list):
-            value = "' or . = '".join(value)
-            return f"@{name}[. = '{value}']"
-        else:
+        if not isinstance(value, list):
             return f"@{name}='{value}'"
+        value = "' or . = '".join(value)
+        return f"@{name}[. = '{value}']"
 
     def _get_tag_and_constraints(self, tag):
         if tag is None:
@@ -331,7 +327,7 @@ class ElementFinder(ContextAware):
         return min(locator.find("="), locator.find(":"))
 
     def _element_matches(self, element, tag, constraints):
-        if not element.tag_name.lower() == tag:
+        if element.tag_name.lower() != tag:
             return False
         for name in constraints:
             if isinstance(constraints[name], list):
@@ -358,7 +354,7 @@ class ElementFinder(ContextAware):
         for attr in ["@src", "@href"]:
             if attr in key_attrs:
                 if url is None or xpath_url is None:
-                    url = self._get_base_url() + "/" + criteria
+                    url = f"{self._get_base_url()}/{criteria}"
                     xpath_url = escape_xpath_value(url)
                 attrs.append(f"{attr}={xpath_url}")
         return attrs

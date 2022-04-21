@@ -23,8 +23,7 @@ def reporter():
 
 @pytest.mark.skipif(WINDOWS, reason="ApprovalTest do not support different line feeds")
 def test_string(reporter):
-    results = []
-    results.append(escape_xpath_value("tidii"))
+    results = [escape_xpath_value("tidii")]
     results.append(escape_xpath_value('"tidii"'))
     results.append(escape_xpath_value("'tidii'"))
     results.append(escape_xpath_value("\"'tidii'"))

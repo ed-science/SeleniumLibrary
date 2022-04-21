@@ -80,18 +80,18 @@ def test_parse_capabilities(creator):
     caps = creator._parse_capabilities(None)
     assert caps == {}
 
+    expected = {"desired_capabilities": {"key1": "value1", "key2": "value2"}}
     for browser in [None, "safari", "headlesschrome", "foobar"]:
         caps = creator._parse_capabilities(
             {"key1": "value1", "key2": "value2"}, browser
         )
-        expected = {"desired_capabilities": {"key1": "value1", "key2": "value2"}}
         assert caps == expected
 
+    expected = {"capabilities": {"key1": "value1", "key2": "value2"}}
     for browser in ["ie", "firefox", "edge"]:
         caps = creator._parse_capabilities(
             {"key1": "value1", "key2": "value2"}, browser
         )
-        expected = {"capabilities": {"key1": "value1", "key2": "value2"}}
         assert caps == expected
 
 

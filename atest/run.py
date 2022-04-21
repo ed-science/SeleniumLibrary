@@ -130,13 +130,17 @@ def acceptance_tests(
 def start_grid():
     node_file = tempfile.TemporaryFile()
     hub_file = tempfile.TemporaryFile()
-    selenium_jar = None
-    for file in os.listdir("."):
-        if file.startswith("selenium-server-standalone"):
-            selenium_jar = file
-            break
+    selenium_jar = next(
+        (
+            file
+            for file in os.listdir(".")
+            if file.startswith("selenium-server-standalone")
+        ),
+        None,
+    )
+
     if not selenium_jar:
-        raise ValueError("Selenium server jar not found: %s" % selenium_jar)
+        raise ValueError(f"Selenium server jar not found: {selenium_jar}")
     hub = subprocess.Popen(
         ["java", "-jar", selenium_jar, "-role", "hub", "-host", "localhost"],
         stderr=subprocess.STDOUT,
@@ -167,14 +171,14 @@ def _grid_status(status=False, role="hub"):
             response = requests.get("http://localhost:4444/wd/hub/status")
             data = response.json()
             if data["value"]["ready"] == status:
-                print("Selenium grid %s ready/started." % role)
+                print(f"Selenium grid {role} ready/started.")
                 return True
         except Exception:
             pass
         count += 1
         if count == 12:
-            raise ValueError("Selenium grid %s not ready/started in 60 seconds." % role)
-        print("Selenium grid %s not ready/started." % role)
+            raise ValueError(f"Selenium grid {role} not ready/started in 60 seconds.")
+        print(f"Selenium grid {role} not ready/started.")
         time.sleep(5)
 
 
@@ -241,10 +245,9 @@ def log_start(command_list, *hiddens):
 
 def process_output(browser):
     print("Verifying results...")
-    options = []
     output = os.path.join(RESULTS_DIR, "output.xml")
     robotstatuschecker.process_output(output, verbose=False)
-    options.extend([opt.format(browser=browser) for opt in REBOT_OPTIONS])
+    options = [opt.format(browser=browser) for opt in REBOT_OPTIONS]
     try:
         rebot_cli(options + [output])
     except SystemExit as exit:
@@ -258,7 +261,7 @@ def create_zip():
     python_version = platform.python_version()
     zip_name = f"rf-{robot_version}-python-{python_version}.zip"
     zip_path = os.path.join(ZIP_DIR, zip_name)
-    print("Zip created in: %s" % zip_path)
+    print(f"Zip created in: {zip_path}")
     zip_file = zipfile.ZipFile(zip_path, "w")
     for root, dirs, files in os.walk(RESULTS_DIR):
         for file in files:

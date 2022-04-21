@@ -29,7 +29,7 @@ class ScopeEvent(Event):
         if scope == "current":
             suite = BuiltIn().get_variable_value("${SUITE NAME}")
             test = BuiltIn().get_variable_value("${TEST NAME}", "")
-            self.scope = suite + "." + test if test != "" else suite
+            self.scope = f"{suite}.{test}" if test != "" else suite
 
     def trigger(self, *args, **kwargs):
         if args[0] == self.scope:

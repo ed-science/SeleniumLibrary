@@ -23,8 +23,7 @@ def reporter():
 
 @pytest.mark.skipif(WINDOWS, reason="ApprovalTest do not support different line feeds")
 def test_normal_file_path(reporter):
-    results = []
-    results.append(_format_path("/foo/file.log", 1))
+    results = [_format_path("/foo/file.log", 1)]
     results.append(_format_path("/foo/file-{index}.log", 1))
     results.append(_format_path("/foo/file-{index}.log", "0001"))
     results.append(_format_path("/foo/file-{foo}.log", 1))

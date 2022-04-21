@@ -2,6 +2,4 @@ import platform
 
 
 def ctrl_or_command_key():
-    if platform.system() == "Darwin":
-        return "COMMAND"
-    return "CONTROL"
+    return "COMMAND" if platform.system() == "Darwin" else "CONTROL"

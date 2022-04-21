@@ -83,7 +83,7 @@ class WaitingKeywords(LibraryComponent):
         New in SeleniumLibrary 4.0
         """
 
-        expected = str(expected)
+        expected = expected
         self._wait_until(
             lambda: expected == self.driver.current_url,
             f"Location did not become '{expected}' in <TIMEOUT>.",
@@ -111,7 +111,7 @@ class WaitingKeywords(LibraryComponent):
 
         New in SeleniumLibrary 4.3
         """
-        location = str(location)
+        location = location
         self._wait_until(
             lambda: location != self.driver.current_url,
             f"Location is '{location}' in <TIMEOUT>.",
@@ -139,7 +139,7 @@ class WaitingKeywords(LibraryComponent):
 
         New in SeleniumLibrary 4.0
         """
-        expected = str(expected)
+        expected = expected
         self._wait_until(
             lambda: expected in self.driver.current_url,
             f"Location did not contain '{expected}' in <TIMEOUT>.",
@@ -167,7 +167,7 @@ class WaitingKeywords(LibraryComponent):
 
         New in SeleniumLibrary 4.3
         """
-        location = str(location)
+        location = location
         self._wait_until(
             lambda: location not in self.driver.current_url,
             f"Location did contain '{location}' in <TIMEOUT>.",

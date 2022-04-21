@@ -487,7 +487,7 @@ class SeleniumLibrary(DynamicCore):
         if is_truthy(plugins):
             plugin_libs = self._parse_plugins(plugins)
             self._plugins = plugin_libs
-            libraries = libraries + plugin_libs
+            libraries += plugin_libs
         self._drivers = WebDriverCache()
         DynamicCore.__init__(self, libraries)
 
@@ -662,6 +662,8 @@ class SeleniumLibrary(DynamicCore):
 
     def _resolve_screenshot_root_directory(self):
         screenshot_root_directory = self.screenshot_root_directory
-        if is_string(screenshot_root_directory):
-            if screenshot_root_directory.upper() == EMBED:
-                self.screenshot_root_directory = EMBED
+        if (
+            is_string(screenshot_root_directory)
+            and screenshot_root_directory.upper() == EMBED
+        ):
+            self.screenshot_root_directory = EMBED

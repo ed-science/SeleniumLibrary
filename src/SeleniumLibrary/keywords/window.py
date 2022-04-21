@@ -117,7 +117,7 @@ class WindowKeywords(LibraryComponent):
         except NoSuchWindowException:
             pass
         finally:
-            if not is_string(browser) or not browser.upper() == "CURRENT":
+            if not is_string(browser) or browser.upper() != "CURRENT":
                 self.drivers.switch(browser)
             self._window_manager.select(locator, timeout)
 
@@ -284,7 +284,6 @@ class WindowKeywords(LibraryComponent):
 
     def _log_list(self, items, what="item"):
         msg = [f"Altogether {len(items)} {what}{plural_or_not(items)}."]
-        for index, item in enumerate(items):
-            msg.append(f"{index + 1}: {item}")
+        msg.extend(f"{index + 1}: {item}" for index, item in enumerate(items))
         self.info("\n".join(msg))
         return items

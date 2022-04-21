@@ -26,8 +26,7 @@ class ElementKeywordsPessKeys(unittest.TestCase):
 
     @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
     def test_parse_keys(self):
-        results = []
-        results.append(self.element_keywords._parse_keys("A", "B", "C"))
+        results = [self.element_keywords._parse_keys("A", "B", "C")]
         results.append(self.element_keywords._parse_keys("AAA", "CONTROL", "C"))
         results.append(self.element_keywords._parse_keys("AAA", "CONTROL+B", "C"))
         results.append(self.element_keywords._parse_keys("CONTROL+A", "ALT+B"))
@@ -43,8 +42,7 @@ class ElementKeywordsPessKeys(unittest.TestCase):
 
     @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
     def test_parse_keys_aliases(self):
-        results = []
-        results.append(self.element_keywords._parse_aliases("CTRL"))
+        results = [self.element_keywords._parse_aliases("CTRL")]
         results.append(self.element_keywords._parse_aliases("ESC"))
         results.append(self.element_keywords._parse_aliases("CONTROL"))
         results.append(self.element_keywords._parse_aliases("BB"))
@@ -53,8 +51,7 @@ class ElementKeywordsPessKeys(unittest.TestCase):
 
     @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
     def test_separate_key(self):
-        results = []
-        results.append(self.element_keywords._separate_key("BB"))
+        results = [self.element_keywords._separate_key("BB")]
         results.append(self.element_keywords._separate_key("ALT+B"))
         results.append(self.element_keywords._separate_key("A+B+C"))
         results.append(self.element_keywords._separate_key("A++"))
@@ -67,8 +64,7 @@ class ElementKeywordsPessKeys(unittest.TestCase):
 
     @unittest.skipIf(WINDOWS, reason="ApprovalTest do not support different line feeds")
     def test_convert_key(self):
-        results = []
-        results.append(self.element_keywords._convert_special_keys(["B"]))
+        results = [self.element_keywords._convert_special_keys(["B"])]
         results.append(self.element_keywords._convert_special_keys(["AA", "CCC"]))
         results.append(self.element_keywords._convert_special_keys(["ALT", "B"]))
         results.append(self.element_keywords._convert_special_keys(["ALT", "CTRL"]))

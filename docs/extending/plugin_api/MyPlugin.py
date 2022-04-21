@@ -10,7 +10,7 @@ class DummyFinder:
 
     def find(self, *args):
         logger.info('DummyFinder args "%s"' % str(args))
-        logger.info("Original finder %s" % self.ctx._original_element_finder)
+        logger.info(f"Original finder {self.ctx._original_element_finder}")
         return "Dummy find"
 
 

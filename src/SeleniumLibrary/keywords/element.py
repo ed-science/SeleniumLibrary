@@ -485,8 +485,7 @@ class ElementKeywords(LibraryComponent):
         elements = self.find_elements(locator)
         if not elements:
             raise ElementNotFound(f"No element with locator '{locator}' found.")
-        for element in elements:
-            script = """
+        script = """
 old_element = arguments[0];
 let newDiv = document.createElement('div');
 newDiv.setAttribute("name", "covered");
@@ -500,6 +499,7 @@ old_element.parentNode.insertBefore(newDiv, old_element);
 old_element.remove();
 newDiv.parentNode.style.overflow = 'hidden';
         """
+        for element in elements:
             self.driver.execute_script(script, element)
 
     @keyword
@@ -976,7 +976,7 @@ return !element.dispatchEvent(evt);
         if len(parsed_key) == 1 and element:
             self.info(f"Pressing special key {key.original} to element.")
             actions.send_keys(key.converted)
-        elif len(parsed_key) == 1 and not element:
+        elif len(parsed_key) == 1:
             self.info(f"Pressing special key {key.original} to browser.")
             actions.send_keys(key.converted)
         else:
